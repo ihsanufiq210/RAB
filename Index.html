@@ -750,6 +750,7 @@
                 volMat: 1,
                 volPsg: 0,
                 volBkr: 0,
+                volRet: 0,
                 hMat: 0,
                 hPsg: 0,
                 hBkr: 0,
@@ -776,8 +777,9 @@
                 uraian: item.uraian,
                 sat: item.sat,
                 volMat: 1,
-                volPsg: 0,
+                volPsg: 1,
                 volBkr: 0,
+                volRet: 0,
                 hMat: hMat,
                 hPsg: hJasa,
                 hBkr: hBkr,
@@ -792,11 +794,12 @@
         function updateItemData(index, key, value, renderFull = false) {
             activeItems[index][key] = value;
 
-            if (['volMat', 'volPsg', 'volBkr', 'hMat', 'hPsg', 'hBkr', 'hJasa'].includes(key)) {
+            if (['volMat', 'volPsg', 'volBkr', 'volRet', 'hMat', 'hPsg', 'hBkr', 'hJasa'].includes(key)) {
                 const item = activeItems[index];
                 const volMat = item.volMat !== undefined ? item.volMat : (item.vol || 0);
-                const volPsg = item.volPsg || 0;
-                const volBkr = item.volBkr || 0;
+                const volPsg = item.volPsg !== undefined ? item.volPsg : 0;
+                const volBkr = item.volBkr !== undefined ? item.volBkr : 0;
+                
                 const hMat = item.hMat || 0;
                 const hPsg = item.hPsg || item.hJasa || 0;
                 const hBkr = item.hBkr || 0;
@@ -817,8 +820,9 @@
         function updateSingleRowCalculations(index) {
             const item = activeItems[index];
             const volMat = item.volMat !== undefined ? item.volMat : (item.vol || 0);
-            const volPsg = item.volPsg || 0;
-            const volBkr = item.volBkr || 0;
+            const volPsg = item.volPsg !== undefined ? item.volPsg : 0;
+            const volBkr = item.volBkr !== undefined ? item.volBkr : 0;
+
             const hMat = item.hMat || 0;
             const hPsg = item.hPsg || item.hJasa || 0;
             const hBkr = item.hBkr || 0;
@@ -898,8 +902,9 @@
                 pageItems.forEach((item, localIdx) => {
                     const idx = startIndex + localIdx;
                     const vMat = item.volMat !== undefined ? item.volMat : (item.vol || 0);
-                    const vPsg = item.volPsg || 0;
-                    const vBkr = item.volBkr || 0;
+                    const vPsg = item.volPsg !== undefined ? item.volPsg : 0;
+                    const vBkr = item.volBkr !== undefined ? item.volBkr : 0;
+                    const vRet = item.volRet !== undefined ? item.volRet : 0;
 
                     const hMat = item.hMat || 0;
                     const hPsg = item.hPsg || item.hJasa || 0;
@@ -919,9 +924,9 @@
                                 <td class="text-left">${item.uraian || '-'}</td>
                                 <td class="text-center">${item.sat || '-'}</td>
                                 <td class="text-center font-bold">${vMat}</td>
-                                <td class="text-center font-bold">-</td>
-                                <td class="text-center font-bold">-</td>
-                                <td class="text-center font-bold">-</td>
+                                <td class="text-center font-bold">${vPsg}</td>
+                                <td class="text-center font-bold">${vBkr}</td>
+                                <td class="text-center font-bold">${vRet}</td>
                                 <td class="text-right">${formatAngka(hMat)}</td>
                                 <td class="text-right">${formatAngka(hPsg)}</td>
                                 <td class="text-right">${formatAngka(hBkr)}</td>
@@ -945,9 +950,9 @@
                                 <td><input type="text" value="${item.uraian || ''}" placeholder="Uraian Pekerjaan / Material" oninput="updateItemData(${idx}, 'uraian', this.value)"></td>
                                 <td><input type="text" value="${item.sat || ''}" placeholder="Sat" oninput="updateItemData(${idx}, 'sat', this.value)" class="text-center"></td>
                                 <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vMat}" oninput="updateItemData(${idx}, 'volMat', parseFloat(this.value)||0)" class="text-center font-bold"></td>
-                                <td><input type="text" value="-" readonly class="text-center font-bold text-slate-400"></td>
-                                <td><input type="text" value="-" readonly class="text-center font-bold text-slate-400"></td>
-                                <td><input type="text" value="-" readonly class="text-center font-bold text-slate-400"></td>
+                                <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vPsg}" oninput="updateItemData(${idx}, 'volPsg', parseFloat(this.value)||0)" class="text-center font-bold"></td>
+                                <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vBkr}" oninput="updateItemData(${idx}, 'volBkr', parseFloat(this.value)||0)" class="text-center font-bold"></td>
+                                <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vRet}" oninput="updateItemData(${idx}, 'volRet', parseFloat(this.value)||0)" class="text-center font-bold"></td>
                                 <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${hMat}" placeholder="0" readonly class="text-right font-medium"></td>
                                 <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${hPsg}" placeholder="0" readonly class="text-right font-medium"></td>
                                 <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${hBkr}" placeholder="0" readonly class="text-right font-medium"></td>
@@ -997,7 +1002,7 @@
                                 <span id="outPPN">Rp 0</span>
                             </div>
                             <div class="flex justify-between text-[11px] font-extrabold border-b-2 border-black pb-0.5">
-                                <span>TOTAL PEMBULATAN:</span>
+                                <span>TOTAL HARGA:</span>
                                 <span id="outGrandTotal">Rp 0</span>
                             </div>
                         </div>
@@ -1079,10 +1084,10 @@
                                 <th rowspan="2" style="width: 2%;" class="no-print">ACT</th>
                             </tr>
                             <tr>
-                                <th style="width: 3.6%;">MAT</th>
-                                <th style="width: 2.8%;">PSG</th>
-                                <th style="width: 2.8%;">BKR</th>
-                                <th style="width: 2.8%;">RETUR</th>
+                                <th style="width: 3%;">MAT</th>
+                                <th style="width: 3%;">PSG</th>
+                                <th style="width: 3%;">BKR</th>
+                                <th style="width: 3%;">RETUR</th>
                                 <th style="width: 8.5%;">MATERIAL</th>
                                 <th style="width: 8%;">PSG</th>
                                 <th style="width: 8%;">BKR</th>
@@ -1170,8 +1175,9 @@
                         const idx = row.origIdx;
                         
                         const vMat = item.volMat !== undefined ? item.volMat : (item.vol || 0);
-                        const vPsg = item.volPsg || 0;
-                        const vBkr = item.volBkr || 0;
+                        const vPsg = item.volPsg !== undefined ? item.volPsg : 0;
+                        const vBkr = item.volBkr !== undefined ? item.volBkr : 0;
+                        const vRet = item.volRet !== undefined ? item.volRet : 0;
 
                         const hMat = item.hMat || 0;
                         const hPsg = item.hPsg || item.hJasa || 0;
@@ -1190,9 +1196,9 @@
                                     <td class="text-left">${item.uraian || '-'}</td>
                                     <td class="text-center">${item.sat || '-'}</td>
                                     <td class="text-center font-bold">${vMat}</td>
-                                    <td class="text-center font-bold">-</td>
-                                    <td class="text-center font-bold">-</td>
-                                    <td class="text-center font-bold">-</td>
+                                    <td class="text-center font-bold">${vPsg}</td>
+                                    <td class="text-center font-bold">${vBkr}</td>
+                                    <td class="text-center font-bold">${vRet}</td>
                                     <td class="text-right">${formatAngka(hMat)}</td>
                                     <td class="text-right">${formatAngka(hPsg)}</td>
                                     <td class="text-right">${formatAngka(hBkr)}</td>
@@ -1210,9 +1216,9 @@
                                     <td><input type="text" value="${item.uraian || ''}" placeholder="Uraian Spesifikasi" oninput="updateItemData(${idx}, 'uraian', this.value)"></td>
                                     <td><input type="text" value="${item.sat || ''}" placeholder="Sat" oninput="updateItemData(${idx}, 'sat', this.value)" class="text-center"></td>
                                     <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vMat}" oninput="updateItemData(${idx}, 'volMat', parseFloat(this.value)||0)" class="text-center font-bold"></td>
-                                    <td><input type="text" value="-" readonly class="text-center font-bold text-slate-400"></td>
-                                    <td><input type="text" value="-" readonly class="text-center font-bold text-slate-400"></td>
-                                    <td><input type="text" value="-" readonly class="text-center font-bold text-slate-400"></td>
+                                    <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vPsg}" oninput="updateItemData(${idx}, 'volPsg', parseFloat(this.value)||0)" class="text-center font-bold"></td>
+                                    <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vBkr}" oninput="updateItemData(${idx}, 'volBkr', parseFloat(this.value)||0)" class="text-center font-bold"></td>
+                                    <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${vRet}" oninput="updateItemData(${idx}, 'volRet', parseFloat(this.value)||0)" class="text-center font-bold"></td>
                                     <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${hMat}" placeholder="0" readonly class="text-right font-medium"></td>
                                     <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${hPsg}" placeholder="0" readonly class="text-right font-medium"></td>
                                     <td><input type="number" inputmode="numeric" pattern="[0-9]*" value="${hBkr}" placeholder="0" readonly class="text-right font-medium"></td>
@@ -1286,10 +1292,10 @@
                                 <th rowspan="2" style="width: 8%;">TOTAL HARGA (Rp)</th>
                             </tr>
                             <tr>
-                                <th style="width: 3.6%;">MAT</th>
-                                <th style="width: 2.8%;">PSG</th>
-                                <th style="width: 2.8%;">BKR</th>
-                                <th style="width: 2.8%;">RETUR</th>
+                                <th style="width: 3%;">MAT</th>
+                                <th style="width: 3%;">PSG</th>
+                                <th style="width: 3%;">BKR</th>
+                                <th style="width: 3%;">RETUR</th>
                                 <th style="width: 8.5%;">MATERIAL</th>
                                 <th style="width: 8.25%;">PSG</th>
                                 <th style="width: 8.25%;">BKR</th>
@@ -1317,8 +1323,8 @@
                 if (res[kat] === undefined) res[kat] = 0;
 
                 const vMat = item.volMat !== undefined ? item.volMat : (item.vol || 0);
-                const vPsg = item.volPsg || 0;
-                const vBkr = item.volBkr || 0;
+                const vPsg = item.volPsg !== undefined ? item.volPsg : 0;
+                const vBkr = item.volBkr !== undefined ? item.volBkr : 0;
 
                 const hMat = item.hMat || 0;
                 const hPsg = item.hPsg || item.hJasa || 0;
@@ -1380,8 +1386,8 @@
             let totalSub = 0;
             activeItems.forEach(item => {
                 const vMat = item.volMat !== undefined ? item.volMat : (item.vol || 0);
-                const vPsg = item.volPsg || 0;
-                const vBkr = item.volBkr || 0;
+                const vPsg = item.volPsg !== undefined ? item.volPsg : 0;
+                const vBkr = item.volBkr !== undefined ? item.volBkr : 0;
 
                 const hMat = item.hMat || 0;
                 const hPsg = item.hPsg || item.hJasa || 0;
@@ -1400,7 +1406,6 @@
 
             const ppn = totalSub * ppnRate;
             const grandTotal = totalSub + ppn;
-            const pembulatan = Math.round(grandTotal / 1000) * 1000;
 
             const subTotalElem = document.getElementById('outSubtotal');
             const ppnElem = document.getElementById('outPPN');
@@ -1409,8 +1414,8 @@
 
             if (subTotalElem) subTotalElem.textContent = formatRupiah(totalSub);
             if (ppnElem) ppnElem.textContent = formatRupiah(ppn);
-            if (grandTotalElem) grandTotalElem.textContent = formatRupiah(pembulatan);
-            if (terbilangElem) terbilangElem.textContent = pembulatan > 0 ? terbilang(pembulatan) + " Rupiah" : "Nihil Rupiah";
+            if (grandTotalElem) grandTotalElem.textContent = formatRupiah(grandTotal);
+            if (terbilangElem) terbilangElem.textContent = grandTotal > 0 ? terbilang(grandTotal) + " Rupiah" : "Nihil Rupiah";
         }
 
         function formatRupiah(num) {
